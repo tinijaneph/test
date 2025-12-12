@@ -81,4 +81,14 @@
 </head>
 
 <body>
-  <d
+  <div class="card">
+    <h1>Upload Employee CSV</h1>
+    <p>The system will automatically match, fix, and analyze your dataset.</p>
+
+    <form action="/predict_csv" enctype="multipart/form-data" method="post">
+      <input type="file" name="file" accept=".csv" required>
+      <button type="submit">Generate Dashboard</button>
+    </form>
+  </div>
+</body>
+</html>
