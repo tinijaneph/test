@@ -1,94 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Attrition Dashboard – Upload CSV</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attrition Dashboard – Upload CSV</title>
 
-  <style>
-    :root {
-      --cream: #fff7ef;
-      --pink: #eaa9c2;
-      --lightpink: #fde7ef;
-      --navy: #0f1d3a;
-    }
+    <style>
+        :root {
+            --cream: #fff7ef;
+            --pink: #eaa9c2;
+            --lightpink: #fde7ef;
+            --navy: #0f1d3a;
+        }
 
-    body {
-      margin: 0;
-      padding: 0;
-      background: var(--cream);
-      font-family: "Segoe UI";
-      display: flex;
-      height: 100vh;
-      justify-content: center;
-      align-items: center;
-    }
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--cream);
+            font-family: "Segoe UI", Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-    .card {
-      background: white;
-      width: 480px;
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-      text-align: center;
-    }
+        .card {
+            background: #ffffff;
+            width: 420px;
+            padding: 40px 35px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            text-align: center;
+        }
 
-    h1 {
-      margin-bottom: 10px;
-      color: var(--navy);
-      font-size: 28px;
-    }
+        h1 {
+            margin: 0 0 10px 0;
+            color: var(--navy);
+            font-size: 26px;
+        }
 
-    p {
-      margin-bottom: 25px;
-      color: #555;
-      font-size: 16px;
-    }
+        p {
+            color: #555;
+            margin-bottom: 25px;
+        }
 
-    input[type="file"] {
-      padding: 20px;
-      width: 100%;
-      background: var(--lightpink);
-      border: 2px dashed var(--pink);
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: 0.3s;
-    }
+        input[type="file"] {
+            padding: 18px;
+            width: 100%;
+            border: 2px dashed var(--pink);
+            background: var(--lightpink);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 16px;
+        }
 
-    input[type="file"]:hover {
-      background: var(--pink);
-      color: white;
-    }
+        input[type="file"]:hover {
+            background: var(--pink);
+            color: white;
+        }
 
-    button {
-      margin-top: 30px;
-      width: 100%;
-      background: var(--navy);
-      color: white;
-      padding: 15px;
-      border-radius: 12px;
-      border: none;
-      font-size: 18px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 15px;
+            background: var(--navy);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: 0.3s;
+        }
 
-    button:hover {
-      background: var(--pink);
-    }
-  </style>
+        button:hover {
+            background: var(--pink);
+        }
+    </style>
 </head>
 
 <body>
-  <div class="card">
-    <h1>Upload Employee CSV</h1>
-    <p>The system will automatically match, fix, and analyze your dataset.</p>
+    <div class="card">
+        <h1>Upload Employee CSV</h1>
+        <p>The system will auto-match fields & generate the dashboard.</p>
 
-    <form action="/predict_csv" enctype="multipart/form-data" method="post">
-      <input type="file" name="file" accept=".csv" required>
-      <button type="submit">Generate Dashboard</button>
-    </form>
-  </div>
+        <form action="/predict_csv" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".csv" required>
+            <button type="submit">Generate Dashboard</button>
+        </form>
+    </div>
 </body>
 </html>
