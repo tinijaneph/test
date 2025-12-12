@@ -1,93 +1,715 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attrition Dashboard – Upload CSV</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employee Attrition Prediction System</title>
 
-    <style>
-        :root {
-            --cream: #fff7ef;
-            --pink: #eaa9c2;
-            --lightpink: #fde7ef;
-            --navy: #0f1d3a;
-        }
+  <style>
+    :root {
+      --cream: #fff7ef;
+      --pink: #eaa9c2;
+      --lightpink: #fde7ef;
+      --navy: #0f1d3a;
+      --success: #2ecc71;
+      --warning: #f39c12;
+      --danger: #e74c3c;
+    }
 
-        body {
-            margin: 0;
-            padding: 0;
-            background: var(--cream);
-            font-family: "Segoe UI", Arial, sans-serif;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        .card {
-            background: #ffffff;
-            width: 420px;
-            padding: 40px 35px;
-            border-radius: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            text-align: center;
-        }
+    body {
+      background: linear-gradient(135deg, var(--cream) 0%, #ffe8d6 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      padding: 20px;
+    }
 
-        h1 {
-            margin: 0 0 10px 0;
-            color: var(--navy);
-            font-size: 26px;
-        }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
 
-        p {
-            color: #555;
-            margin-bottom: 25px;
-        }
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      animation: fadeIn 0.6s ease-in;
+    }
 
-        input[type="file"] {
-            padding: 18px;
-            width: 100%;
-            border: 2px dashed var(--pink);
-            background: var(--lightpink);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: 0.3s;
-            font-size: 16px;
-        }
+    .header h1 {
+      color: var(--navy);
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
 
-        input[type="file"]:hover {
-            background: var(--pink);
-            color: white;
-        }
+    .header p {
+      color: #666;
+      font-size: 1.1em;
+    }
 
-        button {
-            width: 100%;
-            margin-top: 25px;
-            padding: 15px;
-            background: var(--navy);
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 18px;
-            transition: 0.3s;
-        }
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      border-bottom: 2px solid var(--pink);
+      overflow-x: auto;
+    }
 
-        button:hover {
-            background: var(--pink);
-        }
-    </style>
+    .tab {
+      padding: 15px 30px;
+      background: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--navy);
+      border-radius: 8px 8px 0 0;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .tab:hover {
+      background: var(--lightpink);
+    }
+
+    .tab.active {
+      background: var(--pink);
+      color: white;
+      font-weight: 600;
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.4s ease-in;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .card {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+
+    .upload-area {
+      border: 3px dashed var(--pink);
+      border-radius: 16px;
+      padding: 60px 40px;
+      text-align: center;
+      background: var(--lightpink);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .upload-area:hover {
+      background: #fdd4e5;
+      border-color: var(--navy);
+      transform: translateY(-2px);
+    }
+
+    .upload-area.drag-over {
+      background: var(--pink);
+      border-color: var(--navy);
+      transform: scale(1.02);
+    }
+
+    .upload-icon {
+      font-size: 4em;
+      margin-bottom: 20px;
+      color: var(--pink);
+    }
+
+    .upload-area h2 {
+      color: var(--navy);
+      margin-bottom: 10px;
+      font-size: 1.5em;
+    }
+
+    .upload-area p {
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .file-info {
+      margin-top: 20px;
+      padding: 15px;
+      background: white;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .file-info.show {
+      display: block;
+    }
+
+    .file-info strong {
+      color: var(--navy);
+    }
+
+    button {
+      background: var(--navy);
+      color: white;
+      padding: 15px 40px;
+      border-radius: 12px;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background: var(--pink);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(234, 169, 194, 0.4);
+    }
+
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .loading.show {
+      display: block;
+    }
+
+    .spinner {
+      border: 4px solid var(--lightpink);
+      border-top: 4px solid var(--pink);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    .api-tester {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    @media (max-width: 768px) {
+      .api-tester {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--navy);
+      font-weight: 600;
+    }
+
+    .input-group input,
+    .input-group select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--lightpink);
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+
+    .input-group input:focus,
+    .input-group select:focus {
+      outline: none;
+      border-color: var(--pink);
+    }
+
+    .result-box {
+      background: var(--lightpink);
+      padding: 30px;
+      border-radius: 12px;
+      min-height: 200px;
+    }
+
+    .result-box h3 {
+      color: var(--navy);
+      margin-bottom: 15px;
+    }
+
+    .risk-badge {
+      display: inline-block;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-weight: 600;
+      margin: 10px 0;
+    }
+
+    .risk-badge.low {
+      background: var(--success);
+      color: white;
+    }
+
+    .risk-badge.medium {
+      background: var(--warning);
+      color: white;
+    }
+
+    .risk-badge.high {
+      background: var(--danger);
+      color: white;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .feature-card {
+      background: var(--lightpink);
+      padding: 25px;
+      border-radius: 12px;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .feature-icon {
+      font-size: 2.5em;
+      margin-bottom: 15px;
+    }
+
+    .feature-card h3 {
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      color: #666;
+      font-size: 0.9em;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .sample-btn {
+      background: var(--pink);
+      padding: 10px 20px;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .info-box {
+      background: #e8f4f8;
+      border-left: 4px solid #3498db;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+
+    .code-block {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      margin: 15px 0;
+    }
+  </style>
 </head>
 
 <body>
-    <div class="card">
-        <h1>Upload Employee CSV</h1>
-        <p>The system will auto-match fields & generate the dashboard.</p>
-
-        <form action="/predict_csv" method="post" enctype="multipart/form-data">
-            <input type="file" name="file" accept=".csv" required>
-            <button type="submit">Generate Dashboard</button>
-        </form>
+  <div class="container">
+    <div class="header">
+      <h1>Employee Attrition Prediction System</h1>
+      <p>ML-Powered HR Analytics Dashboard</p>
     </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('upload')">Batch Prediction</button>
+      <button class="tab" onclick="switchTab('api-test')">API Testing</button>
+      <button class="tab" onclick="switchTab('docs')">Documentation</button>
+      <button class="tab" onclick="switchTab('about')">About</button>
+    </div>
+
+    <!-- Upload Tab -->
+    <div id="upload" class="tab-content active">
+      <div class="card">
+        <form id="uploadForm" enctype="multipart/form-data">
+          <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📁</div>
+            <h2>Upload Employee Data</h2>
+            <p>Drag & drop your CSV file here or click to browse</p>
+            <input type="file" id="fileInput" name="file" accept=".csv" required />
+            <button type="button" onclick="document.getElementById('fileInput').click()">
+              Select CSV File
+            </button>
+          </div>
+
+          <div class="file-info" id="fileInfo">
+            <strong>Selected file:</strong> <span id="fileName"></span> (<span id="fileSize"></span>)
+          </div>
+
+          <button type="submit" id="analyzeBtn" disabled>
+             Analyze Employee Data
+          </button>
+        </form>
+
+        <div class="loading" id="loading">
+          <div class="spinner"></div>
+          <p>Analyzing employee data and generating predictions...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- API Testing Tab -->
+    <div id="api-test" class="tab-content">
+      <div class="card">
+        <h2 style="margin-bottom: 20px; color: var(--navy);">🔬 Test Single Employee Prediction</h2>
+        <button class="sample-btn" onclick="fillSampleData()">Fill Sample Data</button>
+        
+        <form id="apiTestForm" style="margin-top: 20px;">
+          <div class="api-tester">
+            <div>
+              <div class="input-group">
+                <label>Age</label>
+                <input type="number" id="age" min="18" max="100" required />
+              </div>
+              <div class="input-group">
+                <label>Monthly Income</label>
+                <input type="number" id="monthlyIncome" step="0.01" required />
+              </div>
+              <div class="input-group">
+                <label>Job Role</label>
+                <select id="jobRole" required>
+                  <option value="">Select...</option>
+                  <option value="Sales Executive">Sales Executive</option>
+                  <option value="Research Scientist">Research Scientist</option>
+                  <option value="Laboratory Technician">Laboratory Technician</option>
+                  <option value="Manufacturing Director">Manufacturing Director</option>
+                  <option value="Healthcare Representative">Healthcare Representative</option>
+                  <option value="Manager">Manager</option>
+                  <option value="Sales Representative">Sales Representative</option>
+                  <option value="Research Director">Research Director</option>
+                  <option value="Human Resources">Human Resources</option>
+                </select>
+              </div>
+              <div class="input-group">
+                <label>Department</label>
+                <select id="department" required>
+                  <option value="">Select...</option>
+                  <option value="Sales">Sales</option>
+                  <option value="Research & Development">Research & Development</option>
+                  <option value="Human Resources">Human Resources</option>
+                </select>
+              </div>
+              <div class="input-group">
+                <label>OverTime</label>
+                <select id="overTime" required>
+                  <option value="No">No</option>
+                  <option value="Yes">Yes</option>
+                </select>
+              </div>
+              <div class="input-group">
+                <label>Years At Company</label>
+                <input type="number" id="yearsAtCompany" min="0" required />
+              </div>
+              <div class="input-group">
+                <label>Job Satisfaction (1-4)</label>
+                <input type="number" id="jobSatisfaction" min="1" max="4" required />
+              </div>
+              <div class="input-group">
+                <label>Work Life Balance (1-4)</label>
+                <input type="number" id="workLifeBalance" min="1" max="4" required />
+              </div>
+            </div>
+
+            <div class="result-box">
+              <h3>Prediction Result</h3>
+              <div id="apiResult">
+                <p style="color: #999;">Fill in the form and click "Predict" to see results</p>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit">Predict Attrition Risk</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Documentation Tab -->
+    <div id="docs" class="tab-content">
+      <div class="card">
+        <h2 style="margin-bottom: 20px; color: var(--navy);">API Documentation</h2>
+        
+        <h3 style="color: var(--navy); margin: 30px 0 15px;">Available Endpoints</h3>
+        
+        <div style="margin-bottom: 30px;">
+          <h4 style="color: var(--pink);">POST /predict</h4>
+          <p style="margin: 10px 0;">Predict attrition risk for a single employee</p>
+          <div class="code-block">
+curl -X POST "http://localhost:8000/predict" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "Age": 35,
+    "MonthlyIncome": 5000,
+    "JobRole": "Sales Executive",
+    ...
+  }'
+          </div>
+        </div>
+
+        <div style="margin-bottom: 30px;">
+          <h4 style="color: var(--pink);">POST /predict_batch</h4>
+          <p style="margin: 10px 0;">Predict attrition risk for multiple employees</p>
+        </div>
+
+        <div style="margin-bottom: 30px;">
+          <h4 style="color: var(--pink);">GET /model_info</h4>
+          <p style="margin: 10px 0;">Get model performance metrics</p>
+        </div>
+
+        <div class="info-box">
+          <strong>📝 Note:</strong> All API endpoints return JSON responses with detailed prediction information including risk level, probability, and contributing factors.
+        </div>
+      </div>
+    </div>
+
+    <!-- About Tab -->
+    <div id="about" class="tab-content">
+      <div class="card">
+        <h2 style="margin-bottom: 30px; color: var(--navy);">About This System</h2>
+        
+        <div class="features-grid">
+          <div class="feature-card">
+            <h3>ML-Powered</h3>
+            <p>Logistic Regression model trained on employee data with 75% accuracy and 0.807 AUC-ROC</p>
+          </div>
+          <div class="feature-card">
+            <h3>Interactive Dashboard</h3>
+            <p>Visual analytics with Plotly charts for comprehensive insights</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Fast API</h3>
+            <p>High-performance REST API built with FastAPI framework</p>
+          </div>
+          <div class="feature-card">
+            <h3>Risk Factors</h3>
+            <p>Identifies top contributing factors for attrition risk</p>
+          </div>
+        </div>
+
+        <div style="margin-top: 40px;">
+          <h3 style="color: var(--navy); margin-bottom: 15px;">Model Performance</h3>
+          <ul style="line-height: 2; color: #666;">
+            <li>Accuracy: 75.2%</li>
+            <li>Precision: 36.7%</li>
+            <li>Recall: 76.6%</li>
+            <li>F1-Score: 49.7%</li>
+            <li>AUC-ROC: 80.7%</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Tab switching
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById(tabName).classList.add('active');
+    }
+
+    // File upload handling
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const fileInfo = document.getElementById('fileInfo');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+
+    uploadArea.addEventListener('click', () => fileInput.click());
+
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('drag-over');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('drag-over');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('drag-over');
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        fileInput.files = files;
+        updateFileInfo();
+      }
+    });
+
+    fileInput.addEventListener('change', updateFileInfo);
+
+    function updateFileInfo() {
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        document.getElementById('fileName').textContent = file.name;
+        document.getElementById('fileSize').textContent = (file.size / 1024).toFixed(2) + ' KB';
+        fileInfo.classList.add('show');
+        analyzeBtn.disabled = false;
+      }
+    }
+
+    // Form submission
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+
+      document.getElementById('loading').classList.add('show');
+      analyzeBtn.disabled = true;
+
+      try {
+        const response = await fetch('/predict_csv', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (response.ok) {
+          const html = await response.text();
+          const newWindow = window.open();
+          newWindow.document.write(html);
+        } else {
+          alert('Error processing file. Please check your CSV format.');
+        }
+      } catch (error) {
+        alert('Error: ' + error.message);
+      } finally {
+        document.getElementById('loading').classList.remove('show');
+        analyzeBtn.disabled = false;
+      }
+    });
+
+    // API Testing
+    function fillSampleData() {
+      document.getElementById('age').value = 35;
+      document.getElementById('monthlyIncome').value = 5000;
+      document.getElementById('jobRole').value = 'Sales Executive';
+      document.getElementById('department').value = 'Sales';
+      document.getElementById('overTime').value = 'Yes';
+      document.getElementById('yearsAtCompany').value = 5;
+      document.getElementById('jobSatisfaction').value = 2;
+      document.getElementById('workLifeBalance').value = 2;
+    }
+
+    document.getElementById('apiTestForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // This is a simplified example - you'll need to include all required fields
+      const data = {
+        Age: parseInt(document.getElementById('age').value),
+        MonthlyIncome: parseFloat(document.getElementById('monthlyIncome').value),
+        JobRole: document.getElementById('jobRole').value,
+        Department: document.getElementById('department').value,
+        OverTime: document.getElementById('overTime').value,
+        YearsAtCompany: parseInt(document.getElementById('yearsAtCompany').value),
+        JobSatisfaction: parseInt(document.getElementById('jobSatisfaction').value),
+        WorkLifeBalance: parseInt(document.getElementById('workLifeBalance').value),
+        // Add other required fields with default values
+        BusinessTravel: "Travel_Rarely",
+        DailyRate: 800,
+        DistanceFromHome: 5,
+        Education: 3,
+        EducationField: "Life Sciences",
+        EmployeeCount: 1,
+        EnvironmentSatisfaction: 3,
+        Gender: "Male",
+        HourlyRate: 65,
+        JobInvolvement: 3,
+        JobLevel: 2,
+        MaritalStatus: "Single",
+        MonthlyRate: 15000,
+        NumCompaniesWorked: 2,
+        PercentSalaryHike: 15,
+        PerformanceRating: 3,
+        RelationshipSatisfaction: 3,
+        StockOptionLevel: 0,
+        TotalWorkingYears: 10,
+        TrainingTimesLastYear: 3,
+        YearsInCurrentRole: 3,
+        YearsSinceLastPromotion: 2,
+        YearsWithCurrManager: 3
+      };
+
+      try {
+        const response = await fetch('/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        
+        const resultDiv = document.getElementById('apiResult');
+        resultDiv.innerHTML = `
+          <h4 style="color: var(--navy); margin-bottom: 15px;">Attrition Risk: ${result.attrition_risk}</h4>
+          <div class="risk-badge ${result.risk_level.toLowerCase()}">${result.risk_level} Risk</div>
+          <p style="margin: 15px 0;"><strong>Probability:</strong> ${(result.probability * 100).toFixed(2)}%</p>
+          ${result.top_risk_factors ? `
+            <div style="margin-top: 20px;">
+              <strong>Top Risk Factors:</strong>
+              <ul style="margin-top: 10px; text-align: left;">
+                ${result.top_risk_factors.map(factor => `<li>${factor}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+        `;
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    });
+  </script>
 </body>
 </html>
