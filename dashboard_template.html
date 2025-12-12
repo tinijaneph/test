@@ -1,19 +1,93 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Attrition Dashboard – Upload CSV</title>
-    <style>
-        body {font-family: Arial; text-align: center; margin-top: 100px; background: #f0f2f5;}
-        input[type=file] {padding: 20px; font-size: 18px;}
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Attrition Dashboard – Upload CSV</title>
+  <style>
+    :root {
+      --cream: #fff7ef;
+      --pink: #eaa9c2;
+      --lightpink: #fde7ef;
+      --navy: #0f1d3a;
+    }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: var(--cream);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: var(--navy);
+    }
+
+    .container {
+      background: white;
+      padding: 40px 50px;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      width: 450px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 28px;
+      color: var(--navy);
+    }
+
+    p {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    input[type="file"] {
+      padding: 15px;
+      border: 2px dashed var(--pink);
+      border-radius: 10px;
+      background: var(--lightpink);
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+      transition: 0.3s;
+    }
+
+    input[type="file"]:hover {
+      background: var(--pink);
+      color: white;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background: var(--navy);
+      color: white;
+      transition: 0.3s;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background: var(--pink);
+    }
+  </style>
 </head>
 <body>
-    <h1>Employee Attrition Prediction Dashboard</h1>
-    <p>Upload your employee CSV (must contain all required columns)</p>
+  <div class="container">
+    <h1>Employee Attrition Prediction</h1>
+    <p>Upload a CSV file to generate predictions and dashboard insights.</p>
+
     <form action="/predict_csv" enctype="multipart/form-data" method="post">
-        <input name="file" type="file" accept=".csv" required>
-        <br><br>
-        <button type="submit" style="padding:15px 30px; font-size:18px;">Generate Dashboard</button>
+      <input name="file" type="file" accept=".csv" required />
+      <button type="submit">Generate Dashboard</button>
     </form>
+  </div>
 </body>
 </html>
