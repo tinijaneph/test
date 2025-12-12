@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attrition Dashboard – Upload CSV</title>
+    <style>
+        body {font-family: Arial; text-align: center; margin-top: 100px; background: #f0f2f5;}
+        input[type=file] {padding: 20px; font-size: 18px;}
+    </style>
+</head>
+<body>
+    <h1>Employee Attrition Prediction Dashboard</h1>
+    <p>Upload your employee CSV (must contain all required columns)</p>
+    <form action="/predict_csv" enctype="multipart/form-data" method="post">
+        <input name="file" type="file" accept=".csv" required>
+        <br><br>
+        <button type="submit" style="padding:15px 30px; font-size:18px;">Generate Dashboard</button>
+    </form>
+</body>
+</html>
