@@ -360,15 +360,15 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1>🎯 Employee Attrition Prediction System</h1>
+      <h1>Employee Attrition Prediction System</h1>
       <p>ML-Powered HR Analytics Dashboard</p>
     </div>
 
     <div class="tabs">
-      <button class="tab active" onclick="switchTab('upload')">📊 Batch Prediction</button>
-      <button class="tab" onclick="switchTab('api-test')">🔬 API Testing</button>
-      <button class="tab" onclick="switchTab('docs')">📚 Documentation</button>
-      <button class="tab" onclick="switchTab('about')">ℹ️ About</button>
+      <button class="tab active" onclick="switchTab('upload')">Batch Prediction</button>
+      <button class="tab" onclick="switchTab('api-test')">API Testing</button>
+      <button class="tab" onclick="switchTab('docs')">Documentation</button>
+      <button class="tab" onclick="switchTab('about')">About</button>
     </div>
 
     <!-- Upload Tab -->
@@ -390,7 +390,7 @@
           </div>
 
           <button type="submit" id="analyzeBtn" disabled>
-            🚀 Analyze Employee Data
+            Analyze Employee Data
           </button>
         </form>
 
@@ -404,7 +404,7 @@
     <!-- API Testing Tab -->
     <div id="api-test" class="tab-content">
       <div class="card">
-        <h2 style="margin-bottom: 20px; color: var(--navy);">🔬 Test Single Employee Prediction</h2>
+        <h2 style="margin-bottom: 20px; color: var(--navy);">Test Single Employee Prediction</h2>
         <button class="sample-btn" onclick="fillSampleData()">Fill Sample Data</button>
         
         <form id="apiTestForm" style="margin-top: 20px;">
@@ -471,7 +471,7 @@
             </div>
           </div>
 
-          <button type="submit">🎯 Predict Attrition Risk</button>
+          <button type="submit">Predict Attrition Risk</button>
         </form>
       </div>
     </div>
@@ -479,7 +479,7 @@
     <!-- Documentation Tab -->
     <div id="docs" class="tab-content">
       <div class="card">
-        <h2 style="margin-bottom: 20px; color: var(--navy);">📚 API Documentation</h2>
+        <h2 style="margin-bottom: 20px; color: var(--navy);">API Documentation</h2>
         
         <h3 style="color: var(--navy); margin: 30px 0 15px;">Available Endpoints</h3>
         
@@ -509,7 +509,7 @@ curl -X POST "http://localhost:8000/predict" \
         </div>
 
         <div class="info-box">
-          <strong>📝 Note:</strong> All API endpoints return JSON responses with detailed prediction information including risk level, probability, and contributing factors.
+          <strong>Note:</strong> All API endpoints return JSON responses with detailed prediction information including risk level, probability, and contributing factors.
         </div>
       </div>
     </div>
@@ -521,22 +521,18 @@ curl -X POST "http://localhost:8000/predict" \
         
         <div class="features-grid">
           <div class="feature-card">
-            <div class="feature-icon">🤖</div>
             <h3>ML-Powered Predictions</h3>
             <p>Logistic Regression model achieving 75.2% accuracy and 80.7% AUC-ROC. Identifies 3 out of 4 employees at risk of leaving.</p>
           </div>
           <div class="feature-card">
-            <div class="feature-icon">📊</div>
             <h3>Interactive Analytics</h3>
             <p>Real-time visual insights with Plotly charts. Analyze risk patterns across departments, roles, and demographics.</p>
           </div>
           <div class="feature-card">
-            <div class="feature-icon">⚡</div>
             <h3>Production-Ready API</h3>
             <p>FastAPI backend with <1ms prediction latency. Supports both single employee and batch predictions.</p>
           </div>
           <div class="feature-card">
-            <div class="feature-icon">🎯</div>
             <h3>Actionable Insights</h3>
             <p>Identifies specific risk factors (overtime, compensation, work-life balance) for targeted retention strategies.</p>
           </div>
@@ -546,16 +542,16 @@ curl -X POST "http://localhost:8000/predict" \
           <h3 style="color: var(--navy); margin-bottom: 15px;">Model Performance Metrics</h3>
           <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid var(--navy);">
             <ul style="line-height: 2.2; color: #333; list-style: none; padding: 0;">
-              <li><strong>📈 Overall Accuracy:</strong> 75.2% - Correctly classifies 3 out of 4 employees</li>
-              <li><strong>🎯 Recall (Sensitivity):</strong> 76.6% - Identifies 36 of 47 employees who will leave</li>
-              <li><strong>⚖️ Precision:</strong> 36.7% - Conservative predictions favor retention efforts</li>
-              <li><strong>🔄 F1-Score:</strong> 49.7% - Balanced performance measure</li>
-              <li><strong>📊 AUC-ROC:</strong> 80.7% - Strong ability to discriminate risk levels</li>
+              <li><strong>Overall Accuracy:</strong> 75.2% - Correctly classifies 3 out of 4 employees</li>
+              <li><strong>Recall (Sensitivity):</strong> 76.6% - Identifies 36 of 47 employees who will leave</li>
+              <li><strong>Precision:</strong> 36.7% - Conservative predictions favor retention efforts</li>
+              <li><strong>F1-Score:</strong> 49.7% - Balanced performance measure</li>
+              <li><strong>AUC-ROC:</strong> 80.7% - Strong ability to discriminate risk levels</li>
             </ul>
           </div>
           
           <div style="margin-top: 20px; background: #e8f4f8; padding: 15px; border-radius: 8px;">
-            <strong style="color: var(--navy);">💡 Why This Matters:</strong>
+            <strong style="color: var(--navy);">Why This Matters:</strong>
             <p style="margin: 10px 0 0 0; color: #555; line-height: 1.8;">
               High recall (76.6%) means we catch most at-risk employees, enabling proactive intervention. 
               The model outperforms a naive baseline by 76 percentage points in recall, making it 
