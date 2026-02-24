@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react'
 import MessageBubble from './MessageBubble'
 
-export default function ChatWindow({ messages, onSendMessage, loading, hasSession, onNewSession }) {
+export default function ChatWindow({ messages, onSendMessage, loading, onNewSession }) {
   const [input, setInput] = useState('')
   const bottomRef = useRef(null)
+  const textareaRef = useRef(null)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -13,6 +14,9 @@ export default function ChatWindow({ messages, onSendMessage, loading, hasSessio
     if (!input.trim() || loading) return
     onSendMessage(input.trim())
     setInput('')
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto'
+    }
   }
 
   const handleKey = (e) => {
@@ -22,11 +26,18 @@ export default function ChatWindow({ messages, onSendMessage, loading, hasSessio
     }
   }
 
+  const handleInput = (e) => {
+    setInput(e.target.value)
+    // Auto resize textarea
+    e.target.style.height = 'auto'
+    e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px'
+  }
+
   const suggestedQuestions = [
-    "What is the annual leave policy?",
-    "How do I apply for parental leave?",
-    "What are the remote work guidelines?",
-    "What is the expense reimbursement process?"
+    "What is the CEO remuneration policy?",
+    "How are Non-Executive Directors compensated?",
+    "What are the Long Term Incentive conditions?",
+    "What is the severance policy for the CEO?"
   ]
 
   return (
@@ -36,7 +47,7 @@ export default function ChatWindow({ messages, onSendMessage, loading, hasSessio
           <div className="header-icon">🏢</div>
           <div>
             <h1>HR Policy Navigator</h1>
-            <p>Ask questions about company policies</p>
+            <p>Ask questions about company policies — answers grounded in official documents</p>
           </div>
         </div>
       </div>
@@ -46,7 +57,7 @@ export default function ChatWindow({ messages, onSendMessage, loading, hasSessio
           <div className="welcome-screen">
             <div className="welcome-icon">📋</div>
             <h2>How can I help you today?</h2>
-            <p>Ask me anything about our company policies</p>
+            <p>Ask me anything about your company policies. I'll find the answer and cite my sources.</p>
             <div className="suggested-questions">
               {suggestedQuestions.map((q, i) => (
                 <button
@@ -66,12 +77,10 @@ export default function ChatWindow({ messages, onSendMessage, loading, hasSessio
         ))}
 
         {loading && (
-          <div className="message assistant">
-            <div className="message-avatar assistant-avatar">AI</div>
-            <div className="message-content">
-              <div className="typing-indicator">
-                <span></span><span></span><span></span>
-              </div>
+          <div className="typing-row">
+            <div className="avatar assistant-avatar">AI</div>
+            <div className="typing-indicator">
+              <span></span><span></span><span></span>
             </div>
           </div>
         )}
@@ -82,11 +91,12 @@ export default function ChatWindow({ messages, onSendMessage, loading, hasSessio
       <div className="input-area">
         <div className="input-wrapper">
           <textarea
+            ref={textareaRef}
             className="chat-input"
             value={input}
-            onChange={e => setInput(e.target.value)}
+            onChange={handleInput}
             onKeyDown={handleKey}
-            placeholder="Ask about company policies..."
+            placeholder="Ask about company policies... (Enter to send, Shift+Enter for new line)"
             rows={1}
           />
           <button
