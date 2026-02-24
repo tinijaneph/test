@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 import os
 from services.search_service import PolicySearchService
 from services.chat_service import ChatService
@@ -12,7 +12,7 @@ app = FastAPI(title="Policy Navigator API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Lock this down in production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -29,9 +29,16 @@ class ChatRequest(BaseModel):
     user_id: Optional[str] = "anonymous"
 
 
+class Source(BaseModel):
+    title: str
+    link: str
+    index: int
+    snippet: str  # ← explicitly include snippet
+
+
 class ChatResponse(BaseModel):
     answer: str
-    sources: list
+    sources: List[Source]
     session_id: str
 
 
@@ -43,20 +50,14 @@ def health():
 @app.post("/api/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
     try:
-        # Load conversation history from Firestore
         history = await firestore_service.get_session_history(request.session_id)
-
-        # Search policy documents for relevant context
         search_results = await search_service.search(request.message)
-
-        # Generate answer using Gemini with context
         answer = await chat_service.generate_answer(
             user_message=request.message,
             search_results=search_results,
             conversation_history=history
         )
 
-        # Save to Firestore
         await firestore_service.save_message(
             session_id=request.session_id,
             user_id=request.user_id,
