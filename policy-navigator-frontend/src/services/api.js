@@ -1,7 +1,7 @@
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080'
+const BACKEND_URL = "https://policy-navigator-backend-799818976326.us-central1.run.app"
 
 export const chatAPI = {
-  async sendMessage(message, sessionId, userId = 'user-001') {
+  async sendMessage(message, sessionId, userId = 'anonymous') {
     const res = await fetch(`${BACKEND_URL}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
